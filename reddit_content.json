@@ -1,0 +1,686 @@
+{
+    "subreddit": "LocalLLaMA",
+    "date": "2025-01-18",
+    "posts": [
+        {
+            "title": "Intel should release a 24GB version of the Arc B580",
+            "author": "u/Balance-",
+            "score": 263,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i457gp/intel_should_release_a_24gb_version_of_the_arc/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i457gp/intel_should_release_a_24gb_version_of_the_arc/",
+            "text": "The B580 is already showing impressive performance for LLM inference, matching the RTX 3060 in Vulkan benchmarks (\\~36 tokens/sec on Qwen2 7B) while being more power efficient and $50 cheaper. But VRAM is the real bottleneck for running larger models locally.\n\nWith Intel's strong XMX matrix performance and the existing clamshell memory design validated in shipping docs, a 24GB variant is technically feasible. This would enable running 13B models quantized to 8-bit (most 13B models need \\~14GB), existing models with larger context, etc.\n\nIt would have way better price/performance than RTX 4060 Ti 16GB, native Vulkan support without CUDA lock-in and more performance potential if OpenVINO is further optimized.\n\nThe regular B580's stellar price/performance ratio shows Intel can be aggressive on pricing. A \\~$329 24GB variant would hit a sweet spot for local LLM enthusiasts building inference rigs.\n\nThis is Intel's chance to build mind- and marketshare among AI developers and enthusiasts who are tired of CUDA lock-in. They can grow a community around OpenVINO and their AI tooling. Every developer who builds with Intel's stack today helps their ecosystem forward. The MLPerf results show they have the performance - now they just need to get the hardware into developers' hands.\n\n* Dec 16 '24: [Shipping document suggests that a 24 GB version of Intel's Arc B580 graphics card could be heading to market, though not for gaming](https://www.pcgamer.com/hardware/graphics-cards/shipping-document-suggests-that-a-24-gb-version-of-intels-arc-b580-graphics-card-could-be-heading-to-market-though-not-for-gaming/)\n\nhttps://preview.redd.it/xaydqqjygqde1.png?width=691&amp;format=png&amp;auto=webp&amp;s=0d57bc47d8936ed555b725e7733a88541d20f6d8",
+            "created_utc": "2025-01-18 10:58:44 UTC",
+            "comments": [
+                {
+                    "author": "u/Ragecommie",
+                    "text": "Well duh, but they probably won't. I'm just hoping for any Intel consumer model with &gt;24, but we'll most likely get a 24GB B770. Still, if it's for the right price...\n\nAlso, use oneAPI, not Vulkan, performance is better.\n\nI have machines running 2x and 3xA770s and switching to SYCL / oneAPI made a massive difference.",
+                    "score": 73,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 11:16:52 UTC"
+                },
+                {
+                    "author": "u/uti24",
+                    "text": "&gt;A \\~$329 24GB variant would hit a sweet spot\n\nSweet spot mean something great, yet realistic. \n\nIt would be great, I agree.",
+                    "score": 37,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 11:14:54 UTC"
+                },
+                {
+                    "author": "u/LegitimateCopy7",
+                    "text": "you seem to overlook that the general public is not into the niche that is local AI.",
+                    "score": 24,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 11:32:59 UTC"
+                },
+                {
+                    "author": "u/noiserr",
+                    "text": "You seem to miss the fact that these GPUs were paper launched. They are literally nowhere to be found.",
+                    "score": 17,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 12:03:05 UTC"
+                },
+                {
+                    "author": "u/wfd",
+                    "text": "No, you can't just add more vram to gpu. It's limited by gddr density and memory bus width.\n\nGDDR's density is very low, wormhole AI processor from tenstorrent which is aimming at AI market only has 12GB GDDR per chip.",
+                    "score": 5,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 11:14:50 UTC"
+                }
+            ]
+        },
+        {
+            "title": "KoboldCpp 1.82 - Now supports OuteTTS v0.2+0.3 with speaker voice synthesis and XTTS/OpenAI speech API, TAESD for Flux &amp; SD3, multilingual whisper (plus RAG and WebSearch from v1.81)",
+            "author": "u/HadesThrowaway",
+            "score": 171,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i435so/koboldcpp_182_now_supports_outetts_v0203_with/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i435so/koboldcpp_182_now_supports_outetts_v0203_with/",
+            "text": "Hey it's me Concedo, here again playing how-many-more-API-endpoints-can-koboldcpp-serve. \n\nToday's release brings long awaited TTS support, which works on all versions of OuteTTS GGUFs including the newly released **v0.3 500M and 1B** models. It also provides XTTS and OpenAI Speech compatible APIs, so it can work as a direct TTS drop-in for existing frontends that use those features. \n\nThere are also some pretty cool improvements, as well as many other features, so do check out the release notes if you haven't yet. Last release, we also added WebSearch and a simple browser based RAG, so check that out if you missed it. \n\nhttps://github.com/LostRuins/koboldcpp/releases",
+            "created_utc": "2025-01-18 08:27:13 UTC",
+            "comments": [
+                {
+                    "author": "u/YT_Brian",
+                    "text": "Kobold is really making great strives to be king of the hill for their niche.",
+                    "score": 30,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 08:49:45 UTC"
+                },
+                {
+                    "author": "u/WolframRavenwolf",
+                    "text": "Kobold won! You've won me back with this release! ;)\n\nWould you consider adding [Kokoro](https://github.com/remsky/Kokoro-FastAPI) as well? While it has fewer features than OuteTTS, it delivers excellent quality voices for English.\n\nMost importantly, thank you for another outstanding update. KoboldCpp served as my primary inference engine for a long time. Though I temporarily switched to TabbyAPI, this release provides the final component I needed for a fully local 4o-style audio+video assistant that can observe my screen and interact with me about it. Because of this, I'm gladly returning to KoboldCpp!",
+                    "score": 26,
+                    "mentioned_urls": [
+                        "https://github.com/remsky/Kokoro-FastAPI)"
+                    ],
+                    "created_utc": "2025-01-18 10:25:27 UTC"
+                },
+                {
+                    "author": "u/and_human",
+                    "text": "Oh, fun with custom voices! You're not really in control over the outcome though as you only give it some text as seed. I found this string to give me a somewhat robotic relaxed female voice that I like \"/DefiantDrake\".",
+                    "score": 8,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 09:08:53 UTC"
+                },
+                {
+                    "author": "u/murlakatamenka",
+                    "text": "Meanwhile ollama still doesn't support Vulkan :O",
+                    "score": 6,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 13:17:21 UTC"
+                },
+                {
+                    "author": "u/henk717",
+                    "text": "I do want to clarify the RAG part so the post doesn't accidentally create false impressions.  \nIts not an embedding based solution so I personally don't consider it full RAG, but many in our community do call it RAG due to how similar it is.\n\nWhat it is a text search algorithm that can retrieve matching chunks of text based on the keywords in your query. So with simple lostruins means that its not the embedding varient but a search algorythm. Because of that in the software its called TextDB instead of RAG.",
+                    "score": 5,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 14:10:07 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Have you truly replaced paid models(chatgpt, Claude etc) with self hosted ollama or hugging face ? ",
+            "author": "u/Economy-Fact-8362",
+            "score": 105,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i4awir/have_you_truly_replaced_paid_modelschatgpt_claude/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i4awir/have_you_truly_replaced_paid_modelschatgpt_claude/",
+            "text": "I’ve been experimenting with locally hosted setups, but I keep finding myself coming back to ChatGPT for the ease and performance. For those of you who’ve managed to fully switch, do you still use services like ChatGPT occasionally? Do you use both? \n\nAlso, what kind of GPU setup is really needed to get that kind of seamless experience? My 16GB VRAM feels pretty inadequate in comparison to what these paid models offer. Would love to hear your thoughts and setups...\n\n",
+            "created_utc": "2025-01-18 16:14:58 UTC",
+            "comments": [
+                {
+                    "author": "u/rhaastt-ai",
+                    "text": "Honestly, even for my own companion ai, not really. The small context windows of local models sucks. At least for what I can run. Sure it can code and do things but, it does not remember our conversations like my custom gpts. really makes it hard to stop using paid models.",
+                    "score": 38,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 16:22:29 UTC"
+                },
+                {
+                    "author": "u/talk_nerdy_to_m3",
+                    "text": "Yes and no, I already pay for GPT for the convenience of voice interaction while driving (like having a person in the car to talk to) and Claude for coding.\n\nBut for my applications that I build like RAG, mobile applications with React and other applications that require LLM/VLM I use local models and they work great. I usually just use llama 3.xx 8b on my 4090. \n\nAlso, I exclusively use local models for image generation. Local image generation is light-years ahead of browser based image generation.",
+                    "score": 37,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 16:55:45 UTC"
+                },
+                {
+                    "author": "u/xKYLERxx",
+                    "text": "I'm not having my local models write me entire applications, they're mostly just doing boilerplate code and helping me spot bugs.\n\nThat said, I've completely replaced my ChatGPT subscription with qwen2.5-coder:32b for coding, and qwen2.5:72b for everything else. Is it as good? No. Is it good enough? For me personally yes. Something about being completely detached from the subscription/reliance on a company and knowing I own this permanently makes it worth the small performance hit. \n\nI run OpenWebUI on a server with (2) 3090's. You can run 32b on (1) 3090 of course.",
+                    "score": 29,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 16:54:49 UTC"
+                },
+                {
+                    "author": "u/muxxington",
+                    "text": "I have never used paid models. Even the free models from OpenAI I use at best for testing and comparing. Since Mixtral 8x22B at the latest, self-hosted has been sufficient for me. In the meantime, the question no longer even arises for me. I use self hosted as a daily driver for everything, both privately and professionally.",
+                    "score": 15,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 16:44:08 UTC"
+                },
+                {
+                    "author": "u/atineiatte",
+                    "text": "Closed models have been instrumental in building my capacity to run and tune open models. I know this is frowned upon by real programmers, but I can open up a Claude tab and describe anything I need in Python and get it back in a form I can usually make work, and there is nothing I can run locally that has the same special sauce of consistently understanding hyperspecific script requirements described in plain English. I'm working on smaller trained models for specific functions, currently tuning Phi 3.5 with two 3090s on technical documents from work, but as far as the most useful stock LLM experience you can fit in 16gb VRAM, probably Llama 3.2 11b vision",
+                    "score": 12,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 16:27:42 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Interesting article on how DeepSeek has improved the architecture in DeepSeek V2 and V3.",
+            "author": "u/jpydych",
+            "score": 52,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i4em80/interesting_article_on_how_deepseek_has_improved/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i4em80/interesting_article_on_how_deepseek_has_improved/",
+            "text": "[epoch.ai](http://epoch.ai) has published an interesting article: [https://epoch.ai/gradient-updates/how-has-deepseek-improved-the-transformer-architecture](https://epoch.ai/gradient-updates/how-has-deepseek-improved-the-transformer-architecture)\n\nIt talks about MLA, MoE innovations and Multi-Token Prediction.",
+            "created_utc": "2025-01-18 19:00:14 UTC",
+            "comments": [
+                {
+                    "author": "u/Thomas-Lore",
+                    "text": "Thanks for sharing, this is fascinating.",
+                    "score": 1,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 20:23:15 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Llama 3.2 1B Instruct – What Are the Best Use Cases for Small LLMs?",
+            "author": "u/ThetaCursed",
+            "score": 48,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i4cfpz/llama_32_1b_instruct_what_are_the_best_use_cases/",
+            "external_url": "https://i.redd.it/tr0h9qvkdsde1.png",
+            "text": "",
+            "created_utc": "2025-01-18 17:23:32 UTC",
+            "comments": [
+                {
+                    "author": "u/molbal",
+                    "text": "Classification, data extraction maybe?",
+                    "score": 34,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 17:26:09 UTC"
+                },
+                {
+                    "author": "u/brown2green",
+                    "text": "Llama 3.2 1B Instruct can work as speculative decoding model for Llama 3.2-11B/90B or 3.3-70B.",
+                    "score": 26,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 17:31:30 UTC"
+                },
+                {
+                    "author": "u/ThetaCursed",
+                    "text": "Assistant-like chat and agentic tasks: Knowledge retrieval, Summarization. \n\n  \nMobile AI-powered tools: Writing assistants.",
+                    "score": 7,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 17:51:53 UTC"
+                },
+                {
+                    "author": "u/1ncehost",
+                    "text": "Code completion and autocomplete",
+                    "score": 7,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 17:39:04 UTC"
+                },
+                {
+                    "author": "u/AppearanceHeavy6724",
+                    "text": "believe me or not but it can actually code. small scripts, bash oneliners etc.",
+                    "score": 7,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 17:57:13 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Why can't LLMs be re-trained on the go with the conversation for infinite memory?",
+            "author": "u/freecodeio",
+            "score": 47,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i46zfr/why_cant_llms_be_retrained_on_the_go_with_the/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i46zfr/why_cant_llms_be_retrained_on_the_go_with_the/",
+            "text": "I'm just trying to understand the technical limitations and is this something that's considered. \n\nI think the context window should only exist for instructions, while maintaining an infinte memory. This could really put LLMs in the realms of writing a complete book series and effecively changing the world as w e know it. ",
+            "created_utc": "2025-01-18 12:56:46 UTC",
+            "comments": [
+                {
+                    "author": "u/Vejibug",
+                    "text": "If the \"memory\" is not high quality, it'll hurt the LLM performance. It's also a lot more expensive to train an LLM then have it generate an answer. It's just not very viable, of course some institutions/companies fine tune their LLMs on their documents and stuff but it's still not that great. You still need RAG. \n\nTLDR; Too expensive, not that effective.",
+                    "score": 42,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 13:00:10 UTC"
+                },
+                {
+                    "author": "u/IONaut",
+                    "text": "Looks like everybody in this thread missed the announcement about [Transformers 2.0 - Titans](https://youtu.be/x8jFFhCLDJY?si=zXeRFhAvWuOPIGS0)",
+                    "score": 41,
+                    "mentioned_urls": [
+                        "https://youtu.be/x8jFFhCLDJY?si=zXeRFhAvWuOPIGS0)"
+                    ],
+                    "created_utc": "2025-01-18 13:11:18 UTC"
+                },
+                {
+                    "author": "u/Affectionate-Cap-600",
+                    "text": "about the concept of 'adding new knowledge' with fine tuning/retraining, I answered to another use some time ago, and I think that this response may apply to your question. I'm a bit lazy and I don't have time right now so I will not rephrase it, but I think it is not necessary. I'll keep some quotes about 'follow up' questions the other user made because I think that those may be relevant in this situation \n\n/ ------------\n\n\nit is well known that is really difficult and inefficient to make a llm learn new information with fine tuning / instruction tuning (both SFT and RLHF/DPO/PPO/ORPO)... probably the most effective way is to continue pretraining (even if you would have to start every time from the base model and make a new fine tuning for every model 'update' )\n\n\nObviously, from the perspective of data distribution, continued pretraining is different from retraining the model from scratch... for this reason a new warmup phase would be required, and that generate a spike in the training loss that not always can be recovered without introducing 'catastrophic forgetting' about the data out of the new distribution.\n\n\nbecause of that, at every ' continued pretraining' run, new data need to be mixed with 'old' data (that are consistent with the distribution of the data used during the main training run).\n\nAlso, the amount of new token needed to take down the spike in the training loss caused by the new warmup is not a joke, and it requires a relevant amount of token as % of the main training tokens. given that models are now trained on 10+ T tokens (and I suppose that claude sonnet is trained on much more), every 'update' of the model is going to be expensive even without training a new model from scratch.\n\n\nThere is a good paper about that, unfortunately I don't recall the title.\n\n\n \n\n\nseems that 'pretraining' with next token prediction is needed to add new knowledge: there are many works  that focus on trying to add 'out of domain' knowledge to models, and usually the conclusion is that doing this with SFT is much less efficient and effective than with unsupervised autoregressive next token prediction (and even worst with the various reinforcement learning tasks). \n\nto what extent updated informations / personal informations can be considered as out of domain knowledge is another question, but if different portion of knowledge are introduced in different stages of training (and so with different 'training tasks'), that for sure introduce some sort of 'competition' and doesn't allow a proper integration of knowledge. \n\n\nin the same way, a continued pretraining on top of an instruct tuned model would probably destroy the instruction tuning anyway, since activation patterns are really different here. \n\nprobably the new knowledge would be 'integrated' in portions of the network previously focused on the instruction tuning/alignment, since those portion are not properly activated anymore in a continued pretraining training task.\n\n\n\n&gt;If so, does re-running all the post-training the same as before have predictable results with respect to model capabilities, so you’re basically back where you started except for the knowledge you added through continued pretraining?\n\n\n\nthe concept of 'predictable' results is a good question... I actually don't know the answer. \n\n\nthe only thing that I can say is that probably 'predictable' has different meanings if intended as behavior of the model or weights delta. \n\nthere are probably many 'local' minima (with such big models talking about global minima si quite challenging) in a model training that share most of the model behavior but with much different weights configuration.... \n\n\n&gt;Or can you calculate a delta of the weights after pretraining and the weights after postraining, and just re-apply the delta after doing the continued pretraining?\n\n\nin my opinion (just my view/speculation), is not possible to simply compute the delta since the 'updated' base model will be  a different model and the path of the gradient descent during fine tuning/alignment will probably be different... \n\nI don't think we can really assume that new updated training data just add knowledge. it would probably influence, at some level (if relevant or not...who knows), more aspects than just adding new 'enciclopedic knowledge '.\n\n\nstill, would be really interesting to see the order of magnitude of this difference. with 'not possible' I mean that they won't have the same results, but maybe the margin of error is not so large and so its worth it for really large models like opus or o1 full",
+                    "score": 9,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 13:05:21 UTC"
+                },
+                {
+                    "author": "u/General_Service_8209",
+                    "text": "The problem with the Transformer architecture, which most LLMs use right now, is that it required calculating all possible relations between tokens in the input - which is n^2 operations for n tokens. So training on larger context windows quickly becomes too slow to be feasible.\n\nDuring inference, when calculating the n-th token, the relations between all previous tokens stay constant. But, while they don’t need to be recalculated, they still need to be saved, so you need vram proportional to n^2, which also quickly becomes too much to handle. So, in short, this architecture becomes less and less efficient the larger you make the context window, and an infinite context window would require infinite compute to train, and infinite vram to use.\n\nThere are, however, alternative architectures based on State Space Models. They are still experimental at this point, but they make use of an internal „memory“ vector that they update over time. So the compute and vram required for each token stays constant, allowing them to scale to truly infinite context lengths. However, they still aren’t perfect. Because the vector has a fixed size, information in it that isn’t needed will degrade as part of it is replaced with newer info. So, for example, if you make such a model read a whole book, it would still remember what the first chapter was about in rough terms, but it would no longer be able to do something more specific like quoting a sentence from it. As of right now, this problem is still unsolved, and a lot of researchers try to combine the SSM and Transformer architectures to simultaneously get the infinite context length of the first, and the „associative recall“ capabilities of the second.",
+                    "score": 6,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 13:13:53 UTC"
+                },
+                {
+                    "author": "u/Top-Salamander-2525",
+                    "text": "It would require another module of some kind within the model to include some kind of actual memory. \n\nThink most assume this is the way model design will eventually go, but it still needs a lot of research to find the best way to do it. \n\nSome combination of long context, neural memory, RAG and size of the LLM and training data will probably end up being the answer (+/- something new that hasn’t been invented yet) to approximate human short term, working, long term etc memory.",
+                    "score": 5,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 13:54:30 UTC"
+                }
+            ]
+        },
+        {
+            "title": "5090 OpenCL &amp; Vulkan leaks",
+            "author": "u/segmond",
+            "score": 44,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i3qzom/5090_opencl_vulkan_leaks/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i3qzom/5090_opencl_vulkan_leaks/",
+            "text": "Ack, not crushing 4090.      \n[https://videocardz.com/newz/nvidia-geforce-rtx-5090-appears-in-first-geekbench-opencl-vulkan-leaks](https://videocardz.com/newz/nvidia-geforce-rtx-5090-appears-in-first-geekbench-opencl-vulkan-leaks)  \n",
+            "created_utc": "2025-01-17 21:17:14 UTC",
+            "comments": [
+                {
+                    "author": "u/fallingdowndizzyvr",
+                    "text": "&gt; Ack, not crushing 4090.\n\n26-37% more compute performance with 33% more VRAM that runs almost 100% faster for a 25% price increase. IMO, that's pretty crushing it.",
+                    "score": 71,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-17 21:29:20 UTC"
+                },
+                {
+                    "author": "u/ThenExtension9196",
+                    "text": "Absolutely crushing the 4090. This kind of time savings is literally cash money.",
+                    "score": 24,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-17 23:43:17 UTC"
+                },
+                {
+                    "author": "u/Pro-editor-1105",
+                    "text": "\"4090 performance for a third of the price\"",
+                    "score": 4,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-17 21:57:33 UTC"
+                },
+                {
+                    "author": "u/joninco",
+                    "text": "People gonna be real disappointed when it's unobtainable for less than 5k, though still competitive pricing with the 48GB models.",
+                    "score": 1,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 15:56:08 UTC"
+                },
+                {
+                    "author": "u/a_beautiful_rhind",
+                    "text": "Nothin gonna happen until FP4 takes off like FP8 did and neither of those are really an \"llm\" thing.",
+                    "score": -6,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 01:16:10 UTC"
+                }
+            ]
+        },
+        {
+            "title": "What's the cheapest way to run Llama 3.x 8B class models with realtime-like (chatgpt speed) tokens per second?",
+            "author": "u/synexo",
+            "score": 35,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i3xoyd/whats_the_cheapest_way_to_run_llama_3x_8b_class/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i3xoyd/whats_the_cheapest_way_to_run_llama_3x_8b_class/",
+            "text": "fireworks.ai? spin up on runpod? build a home server?",
+            "created_utc": "2025-01-18 02:38:29 UTC",
+            "comments": [
+                {
+                    "author": "u/Special-Wolverine",
+                    "text": "3080ti runs damn quick on Llama 3.1 8b Q4 max context because memory bandwidth is pretty much the same as the 3090. Max context is about 11gb. Output is low quality unless you set max context (at least that's the case for Ollama)\n\nI'd love to know if the 2080ti 12GB is usable for the same model",
+                    "score": 17,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 02:56:49 UTC"
+                },
+                {
+                    "author": "u/gamesntech",
+                    "text": "8B models are generally fairly easy to run locally so that’s practically free if you have the hardware already. You should be able to run it quite well with a gpu with 8+ GB VRAM (technically even without a GPU). But at the same time llama 3 8B is super cheap on most LLM hosting services so it really depends on your use case, expertise, and how long you plan to keep it running.",
+                    "score": 15,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 03:00:02 UTC"
+                },
+                {
+                    "author": "u/mark-lord",
+                    "text": "Mac Mini running MLX gets ~ 30tps generation speed for $600. $500 if you get the student discount \n\nSource: my M4 Mac mini",
+                    "score": 10,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 09:50:28 UTC"
+                },
+                {
+                    "author": "u/Valuable-Run2129",
+                    "text": "A 4 bit 8B model runs roughly at 45 tokens per second on an M4 Max mbp. 35 t/s on an M1 Max that you can find used on ebay at less than 1300 dollars.  \nAn M1 Max will give you a chatgpt experience on a model that size.\nUse MLX for best performance.",
+                    "score": 7,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 03:33:38 UTC"
+                },
+                {
+                    "author": "u/oldschooldaw",
+                    "text": "Cheapest really depends on use case and definition of cost. Is it dollars, privacy, 0 queues and rate limits etc. The absolute lowest cost solution is get a groq api key and use their inference. It’s very fast but has limits and obviously you have no say in what they use your data for. \n\nIt all depends!",
+                    "score": 5,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 03:32:17 UTC"
+                }
+            ]
+        },
+        {
+            "title": "[2403.09919] Recurrent Drafter for Fast Speculative Decoding in Large Language Models",
+            "author": "u/Thrumpwart",
+            "score": 27,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i3w7ao/240309919_recurrent_drafter_for_fast_speculative/",
+            "external_url": "https://arxiv.org/abs/2403.09919",
+            "text": "",
+            "created_utc": "2025-01-18 01:20:34 UTC",
+            "comments": []
+        },
+        {
+            "title": "The “apple” test -  Why aren’t newer reasoning models doing better on this basic benchmark? (and yes, I know token prediction mechanics play a role) ",
+            "author": "u/Porespellar",
+            "score": 27,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i3rpsh/the_apple_test_why_arent_newer_reasoning_models/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i3rpsh/the_apple_test_why_arent_newer_reasoning_models/",
+            "text": "Most of you are probably familiar with the infamous LLM “apple test” benchmark.\n\nIf you’re not, here it is, you give an LLM the following seemingly simple instruction prompt:\n\n- Write 10 sentences that end in the word “apple”.\n\nSadly, most open source (and even a lot of frontier models fail miserably at this task. I’ve read that it has a lot to do with the way token prediction works, but some models can actually pass this test easily.\n\nModels that I’ve tested that pass or fail on this test:\n\nLLMs that PASS the apple test:\n\n- Llama 3.3:70b (Q4KM)\n- Athene-V2 (Q4KM)\n- Nemotron (Q4KM)\n- Qwen 2.5:72b (Q4KM)\n\nLLMs that FAIL the apple test (most are newer models) \n\n- Phi-4 14b (FP16)\n- InternLM3 (FP16)\n- Falcon 3 10b (FP16)\n- Granite 3 Dense (FP16)\n- QwQ 32b (Q_8)\n- GLM-4 8b (FP16)\n- Command-R (Q4KM)\n- MiniCPM 8b v2.6 (FP16)\n- Mistral Small 22b (Q4KM)\n- Nemotron Mini 4b (FP16)\n- Qwen 2.5 7b (FP16) \n- WizardLM2 7b (FP16)\n\nFAILED but with an honorable mention:\n\n- Olmo2 14b (FP16) - this model is lightning fast and got 8 of 10 consistently correct and was able to fix its mistake after a second shot at it (most models won’t do better with more chances). \n\nThis task seems to be challenging for models under 70b to complete. Even the newer reasoning models with higher test time compute capabilities don’t seem to do well at all. \n\n- Why haven’t newer models gotten better at this task over time? \n- Is the underlying mechanism of token prediction still preventing success? \n- Are the models that this works with just cheating by training to pass the specific benchmark? \n\nHas anyone found an open source model under 70b that can pass the apple test consistently? ",
+            "created_utc": "2025-01-17 21:49:22 UTC",
+            "comments": [
+                {
+                    "author": "u/DinoAmino",
+                    "text": "Good question. I was hoping the recent qwens or internalLm would have cracked it. Seems that 70B is still the minimum for quality \"reasoning\". Maybe that's just the way it's going to be with transformers?",
+                    "score": 13,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-17 22:03:35 UTC"
+                },
+                {
+                    "author": "u/Affectionate-Cap-600",
+                    "text": "deepseek 'deep think' (I think it is r1-lite-preview) reasoning:\n\n&gt;Okay, so I was asked to write 10 sentences that end with the word \"apple.\" I provided some sentences, but now the user is asking, \"are you sure?\" Hmm, maybe they want me to double-check my work or perhaps there's something wrong with my sentences. Let me think about this.\n&gt;\n&gt;First, I need to make sure that all my sentences indeed end with the word \"apple.\" Let's review them one by one.\n&gt;\n&gt;**1. \"I picked a ripe red apple from the tree.\" — Ends with \"apple.\" That's correct.**\n&gt;[...]\n\nlol.\n\n&gt;This task seems to be challenging for models under 70b to complete. \n\nbigger MoEs also struggle with it\n\ndeepseek v3 and MiniMax-01 fail but usually (testing on their webui, so I can't set the temp to 0 or top_k to 1) get it right when I point out their error, but many times they fail miserably if I ask something like 'are you sure?'\n\nquite interesting, claude haiku got it right every time with temp up to 1",
+                    "score": 7,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-17 22:32:11 UTC"
+                },
+                {
+                    "author": "u/kryptkpr",
+                    "text": "When a model fails, in what way does it fail: not enough sentences (ends early?), sentences don't end in apple?, sentences end in apple but don't make sense?\n\nWhat if you ask for 5? Or 3? Any relationship between how many you ask for and performance?",
+                    "score": 5,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-17 22:14:33 UTC"
+                },
+                {
+                    "author": "u/liminite",
+                    "text": "Assuming you’re using the same exact token sampling settings on every single test, I think this may have to do with which models were trained on which LLM outputs. That means that even before sampling, they’ve been trained on a data set that has been sampled to reduce repetition. Even RLHF probably has a propensity to avoid repetition on tasks that don’t explicitly call for it (a small subset).",
+                    "score": 2,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-17 22:11:33 UTC"
+                },
+                {
+                    "author": "u/MediumATuin",
+                    "text": "I found it seems to work a bit better with \"Write 10 sentences that end \\*with\\* the word “apple”.\". But this seems still hard for most models.",
+                    "score": 2,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-17 22:45:27 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Grokking at the Edge of Numerical Stability",
+            "author": "u/No_Afternoon_4260",
+            "score": 25,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i3z6cb/grokking_at_the_edge_of_numerical_stability/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i3z6cb/grokking_at_the_edge_of_numerical_stability/",
+            "text": "https://arxiv.org/abs/2501.04697\n\nGrokking, the sudden generalization that occurs after prolonged overfitting, is a surprising phenomenon challenging our understanding of deep learning. Although significant progress has been made in understanding grokking, the reasons behind the delayed generalization and its dependence on regularization remain unclear. In this work, we argue that without regularization, grokking tasks push models to the edge of numerical stability, introducing floating point errors in the Softmax function, which we refer to as Softmax Collapse (SC). We demonstrate that SC prevents grokking and that mitigating SC enables grokking without regularization. Investigating the root cause of SC, we find that beyond the point of overfitting, the gradients strongly align with what we call the naïve loss minimization (NLM) direction. This component of the gradient does not alter the model's predictions but decreases the loss by scaling the logits, typically by scaling the weights along their current direction. We show that this scaling of the logits explains the delay in generalization characteristic of grokking and eventually leads to SC, halting further learning. To validate our hypotheses, we introduce two key contributions that address the challenges in grokking tasks: StableMax, a new activation function that prevents SC and enables grokking without regularization, and ⊥Grad, a training algorithm that promotes quick generalization in grokking tasks by preventing NLM altogether. These contributions provide new insights into grokking, elucidating its delayed generalization, reliance on regularization, and the effectiveness of existing grokking-inducing methods. Code for this paper is available at this https URL.",
+            "created_utc": "2025-01-18 04:01:09 UTC",
+            "comments": [
+                {
+                    "author": "u/IxinDow",
+                    "text": "Even without relation to the grokking concept. Their two main contributions are:\n\n\\- StableMax  \n\\- ⊥Grad - in the paper authors show is acting similarly to weight decay, but more precisely",
+                    "score": 3,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 04:30:38 UTC"
+                }
+            ]
+        },
+        {
+            "title": "4080 16gb and my old 3070 8gb",
+            "author": "u/Glooves",
+            "score": 21,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i4fmvy/4080_16gb_and_my_old_3070_8gb/",
+            "external_url": "https://www.reddit.com/gallery/1i4fmvy",
+            "text": "Decided to throw my old 3070 in and an old set of ddr4 to see what happens. Now up to 24 gb of vram and 64 gb of dram with a 12700kf. I was worried about my 750 watt psu but it’s pulling under 400 watts at load and I’ll set some limits just in case. Got 22 tok/sec on gwen 2.5 32b q4_0. I’ll try a 70b later. ",
+            "created_utc": "2025-01-18 19:45:36 UTC",
+            "comments": [
+                {
+                    "author": "u/jftuga",
+                    "text": "Please let us know the 70b speed.\nAlso, how much do you estimate monthly electricity cost?",
+                    "score": 3,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 20:10:42 UTC"
+                },
+                {
+                    "author": "u/SSJ2Piccolo",
+                    "text": "cost of the whole build??",
+                    "score": 2,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 20:17:32 UTC"
+                },
+                {
+                    "author": "u/Plane_Ad9568",
+                    "text": "Have an old mining rig! Maybe I can reuse",
+                    "score": 2,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 20:28:32 UTC"
+                },
+                {
+                    "author": "u/mandrak4",
+                    "text": "I have a very similar setup (with the RTX 3070) and I was thinking about buying a 4080, please publish your results running a 70b model, if possible, show videos of the generation... thanks",
+                    "score": 2,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 20:31:34 UTC"
+                },
+                {
+                    "author": "u/ThinkExtension2328",
+                    "text": "Can yall explain this cooling system to me , what I see is the hot bit being “cooled” by the intake. Which sends the hot back into the case. \n\n*gestures around* that’s not really cooling your just making other parts hot",
+                    "score": 1,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 20:58:26 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Nuggt: Retrieve Information from the internet to be used as context for LLM (Open Source)",
+            "author": "u/Loya_3005",
+            "score": 20,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i4a2by/nuggt_retrieve_information_from_the_internet_to/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i4a2by/nuggt_retrieve_information_from_the_internet_to/",
+            "text": "[Nuggt Demo GIF](https://i.redd.it/n6awgafpurde1.gif)\n\nHi r/LocalLLaMA \n\nWe all understand that the quality of LLM output depends heavily on the context and prompt provided. For example, asking an LLM to generate a good blog article on a given topic (let's say *X*) might result in a generic answer that may or may not meet your expectations. However, if you provide guidelines on how to write a good article and supply the LLM with additional relevant information about the topic, you significantly increase the chances of receiving a response that aligns with your needs.\n\nWith this in mind, I wanted to create a workspace that makes it easy to build and manage context for use with LLMs. I imagine there are many of us who might use LLMs in workflows similar to the following:\n\n**Task**: Let’s say you want to write an elevator pitch for your startup.  \n**Step 1**: Research how to write a good elevator pitch, then save the key points as context.  \n**Step 2**: Look up examples of effective elevator pitches and add these examples to your context.  \n**Step 3**: Pass this curated context to the LLM and ask it to craft an elevator pitch for your startup. Importantly, you expect transparency—ensuring the LLM uses your provided context as intended and shows how it informed the output.\n\nIf you find workflows like this appealing, I think you’ll enjoy this tool. Here are its key features:\n\n1. It integrates **Tavily** and **Firecrawl** to gather information on any topic from the internet.\n2. You can highlight any important points, right-click, and save them as context.\n3. You can pass this context to the LLM, which will use it to assist with your task. In its responses, the LLM will cite the relevant parts of the context so you can verify how your input was used and even trace it back to the original sources.\n\nMy hypothesis is that many of us would benefit from building strong context to complete our tasks. Of course, I could be wrong—perhaps this is just one of my idiosyncrasies, putting so much effort into creating detailed context! Who knows? The only way to find out is to post it here and see what the community thinks.\n\nI’d love to hear your feedback!\n\nHere is the github repo: [https://github.com/shoibloya/nuggt-research](https://github.com/shoibloya/nuggt-research)",
+            "created_utc": "2025-01-18 15:36:46 UTC",
+            "comments": []
+        },
+        {
+            "title": "-Nevoria- LLama 3.3 70b",
+            "author": "u/mentallyburnt",
+            "score": 17,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i4bfpo/nevoria_llama_33_70b/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i4bfpo/nevoria_llama_33_70b/",
+            "text": "Hey everyone!\n\nTLDR: This is a merge focused on combining storytelling capabilities with detailed scene descriptions, while maintaining a balanced approach to maintain intelligence and useability and reducing positive bias. Currently ranked as the highest 70B on the UGI benchmark!\n\nWhat went into this?\n\nI took EVA-LLAMA 3.33 for its killer storytelling abilities and mixed it with EURYALE v2.3's detailed scene descriptions. Added Anubis v1 to enhance the prose details, and threw in some Negative\\_LLAMA to keep it from being too sunshine-and-rainbows. All this sitting on a Nemotron-lorablated base.\n\nSubtracting the lorablated base during merging causes a \"weight twisting\" effect. If you've played with my previous Astoria models, you'll recognize this approach - it creates some really interesting balance in how the model responds.\n\nAs usual my goal is to keep the model Intelligent with a knack for storytelling and RP.  \n\n\nBenchmark Results:\n\n\\- UGI Score: 56.75 (Currently #1 for 70B models and equal or better than 123b models!)\n\n\\- Open LLM Average: 43.92% (while not as useful from people training on the questions, still useful)\n\n\\- Solid scores across the board, especially in IFEval (69.63%) and BBH (56.60%)\n\n\n\nAlready got some quantized versions available:  \n\n\nRecommended template: LLam@ception by @.konnect\n\n\n\nCheck it out: [https://huggingface.co/Steelskull/L3.3-MS-Nevoria-70B](https://huggingface.co/Steelskull/L3.3-MS-Nevoria-70B)\n\n\n\nWould love to hear your thoughts and experiences with it! Your feedback helps make the next one even better.   \n\n\nHappy prompting! 🚀",
+            "created_utc": "2025-01-18 16:39:34 UTC",
+            "comments": [
+                {
+                    "author": "u/MeretrixDominum",
+                    "text": "How is the slop? I stopped using Llama 3 70B just because her eyes sparkled with mischief sending shivers down my spine every single time. \n\nWhich is sad because Llama 3 had the best prompt adherence out of any model I tried, including Mistral Large and all its finetunes. That could be a quant issue though. I only have 48GB which means 2.7BPW for the 123Bs and 4.5BPW for the 70Bs.",
+                    "score": 4,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 19:26:37 UTC"
+                },
+                {
+                    "author": "u/Few_Painter_5588",
+                    "text": "Just gave it a small test run.  Here's my review.\n\nI'm happy that the intelligence benchmarks show no signs of degradation. Most frankenmerges degrade performance, but this model has avoided that, and the intellect of the model is still in tact.  However, the ifeval score was an initial concern. The reported IFEVAL is reported at 69.63%. This is a nearly 20% decline from LLama 3.3. I can confirm that this merge has lost some of it's instruction following skills. However, what I noticed is that the model is very 'wordy'. So I think the IFEVAL hit might be overstated.\n\nAs for the actual writing, I think it's a solid story teller, and I do agree with the claim that it's trading blows with a 123B model. Even if you were to run this at IQ4\\_XS, you would still get a really solid story telling model.\n\n\\- It's uncensored\n\n\\- It's creative\n\nI do however still get some Llama slop here and there. It's not common, but it does happen approximately once every 500 words I'd say. For example, in this AI assisted piece, the main characters are going to start a riot in the town square. So it's supposed to be a heavy scene, and yet this line appears:\n\n\"But then a mischievous glint appears in her eye\"\n\nSo, there is still L3.3 slop, but when it's not writing slop, it has a nice style that is distinct from Euryale 2.3 and Anubis. I would put this as one of the better L3.3 models, and at the point where a model's performance is up to personal preference instead of objective performance. That being said, make sure to take it easy when prompting this model. Try to do as little as possible, so that you can witness the full creativity, otherwise you are just going to get a brief rundown of your own prompt.",
+                    "score": 3,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 19:56:28 UTC"
+                },
+                {
+                    "author": "u/Mart-McUH",
+                    "text": "For me it did not feel so great, I tried with Llamaception as suggested but answers were bland and uninspired in RP and intelligence worse than good 70B models. That said I could not make any model including Negative llama to work well. Negative Llama by itself seemed like it lost lot of intelligence and also became quite lewd. So form my point of view it just hurts any model that it is in. Nevoria somewhat recovers from it as Negative Llama is only small part of it, but it is still felt. I used IQ4\\_XS.",
+                    "score": 1,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 20:52:28 UTC"
+                },
+                {
+                    "author": "u/Feisty-Pineapple7879",
+                    "text": "Is it availble on openrouter",
+                    "score": 1,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 16:42:11 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Qualcomm AI hub",
+            "author": "u/Big-Ad1693",
+            "score": 16,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i46hrp/qualcomm_ai_hub/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i46hrp/qualcomm_ai_hub/",
+            "text": "https://github.com/quic/ai-hub-models?tab=readme-ov-file\n\nI check every few months to see how things are going with the Snapdragon NPU, but I never find anything useful, until now\n\nMaybe there are others out there who want to tinker a bit with Android and the NPU.\n\nThere also examples for Image Gen, LLM, whisper \n\n",
+            "created_utc": "2025-01-18 12:25:57 UTC",
+            "comments": [
+                {
+                    "author": "u/ForsookComparison",
+                    "text": "Assuming the surprisingly powerful Qualcomm SOCs are already bound by their memory bandwidth on smaller models that you'd actually run on a phone, would the main draw of using the NPU for LLMs be power efficiency?",
+                    "score": 1,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 19:16:54 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Has anyone tried anything besides native Python to build Agents?",
+            "author": "u/QaeiouX",
+            "score": 13,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i48dmj/has_anyone_tried_anything_besides_native_python/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i48dmj/has_anyone_tried_anything_besides_native_python/",
+            "text": "I know, it's a very common question around here to ask. Actually I am working a project and have been using simple python to build my agentic workflow. But as it is expanding, I am facing some issues on keeping up with it. I am planning to use some framework and Pydantic AI is on my radar. I am also interested by Bee Agent Framework but, it's written in typescript predominantly. If you have any other suggestions, please let me know.",
+            "created_utc": "2025-01-18 14:14:04 UTC",
+            "comments": [
+                {
+                    "author": "u/CountZero2022",
+                    "text": "C# here, not using a framework.  IMHO, in this case frameworks constrain more than they help.",
+                    "score": 11,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 14:17:25 UTC"
+                },
+                {
+                    "author": "u/MoreLoups",
+                    "text": "A lot of folk are using Elixir to build agentic systems. From what i understand the power lies in its actor model and its message passing OTP framework. \n\nOne project that stands out at the moment is Jido https://elixirforum.com/t/jido-a-sdk-for-building-autonomous-agent-systems/68418.",
+                    "score": 6,
+                    "mentioned_urls": [
+                        "https://elixirforum.com/t/jido-a-sdk-for-building-autonomous-agent-systems/68418."
+                    ],
+                    "created_utc": "2025-01-18 16:04:20 UTC"
+                },
+                {
+                    "author": "u/____vladrad",
+                    "text": "I built my own graph that lets you click around and see how things are moving, I have stuff watching you work helping you out, hard to explain",
+                    "score": 3,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 14:52:06 UTC"
+                },
+                {
+                    "author": "u/PascalPatry",
+                    "text": "Yep, we built our own framework in Java over Netty. Fully sync/async support with support for tools (tunctions), structured output and streaming mode for both.\n\nWe get lower latency than LangChain and a very nice API to invoke on both local testing (for development) and production.\n\nIt's not currently open source, but I wouldn't mind to open it up if there is interest.",
+                    "score": 3,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 15:51:18 UTC"
+                },
+                {
+                    "author": "u/koalfied-coder",
+                    "text": "Naw I avoid suffering",
+                    "score": 2,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 16:05:03 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Function calling in llama.cpp?",
+            "author": "u/Few_Acanthisitta_858",
+            "score": 9,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i3r6iu/function_calling_in_llamacpp/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i3r6iu/function_calling_in_llamacpp/",
+            "text": "How are you using function calling in llama.cpp? I tried few things but it doesn't really seem to work 😕 \n",
+            "created_utc": "2025-01-17 21:25:35 UTC",
+            "comments": [
+                {
+                    "author": "u/segmond",
+                    "text": "Two ways,  one is to pass in the OpenAI style function defintion JSON string in the system instruction, and then prompt the LLM.   Another is to use pydantic models to grammar, you can see example code here [https://github.com/ggerganov/llama.cpp/blob/master/examples/pydantic\\_models\\_to\\_grammar\\_examples.py](https://github.com/ggerganov/llama.cpp/blob/master/examples/pydantic_models_to_grammar_examples.py)\n\nHaving gotten these to work, the best way would be to create a facade/wrapper function around the openAI chat, that will intercept the tools being passed, then utilize one of the above methods.  By doing this, you can reuse any project that uses OpenAI for tool calling.   Make sure the underlying model supports tool calling, most of the latest ones do.  Even the tiny 1b-3b models have worked for me.",
+                    "score": 3,
+                    "mentioned_urls": [
+                        "https://github.com/ggerganov/llama.cpp/blob/master/examples/pydantic\\_models\\_to\\_grammar\\_examples.py](https://github.com/ggerganov/llama.cpp/blob/master/examples/pydantic_models_to_grammar_examples.py)"
+                    ],
+                    "created_utc": "2025-01-17 22:53:28 UTC"
+                },
+                {
+                    "author": "u/phree_radical",
+                    "text": "few-shot classification\n\nhttps://www.reddit.com/r/LocalLLaMA/comments/1cafpij/comment/l0s9yzv/",
+                    "score": 3,
+                    "mentioned_urls": [
+                        "https://www.reddit.com/r/LocalLLaMA/comments/1cafpij/comment/l0s9yzv/"
+                    ],
+                    "created_utc": "2025-01-18 00:23:15 UTC"
+                },
+                {
+                    "author": "u/viag",
+                    "text": "I use grammars to force the outputs of the models. You automatically retrieve the signatures of the functions, create the grammar dynamically &amp; it should work fine!",
+                    "score": 1,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 17:49:02 UTC"
+                }
+            ]
+        },
+        {
+            "title": "Whisper turbo fine tuning guidance",
+            "author": "u/fgoricha",
+            "score": 7,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i401lt/whisper_turbo_fine_tuning_guidance/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i401lt/whisper_turbo_fine_tuning_guidance/",
+            "text": "I am looking to try fine tuning whisper large v3 turbo on runpod. I have a 3090 which I could use locally, but why not play with a cloud gpu so I can use my gpu for other stuff. Does anyone have any guides I can follow to help with the fine tuning process? I asked ChatGPT and it almost seems too easy. I already have my audio files in .wav format and their correctly transcribed text files. \n\nThanks for any help or advice!",
+            "created_utc": "2025-01-18 04:53:51 UTC",
+            "comments": [
+                {
+                    "author": "u/Armym",
+                    "text": "This video is really good: https://youtu.be/qXtPPgujufI",
+                    "score": 3,
+                    "mentioned_urls": [
+                        "https://youtu.be/qXtPPgujufI"
+                    ],
+                    "created_utc": "2025-01-18 09:56:07 UTC"
+                }
+            ]
+        },
+        {
+            "title": "What do I need to use to lip sync with audio just a few seconds / segment of a video?",
+            "author": "u/thescientificindian",
+            "score": 5,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i40bx0/what_do_i_need_to_use_to_lip_sync_with_audio_just/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i40bx0/what_do_i_need_to_use_to_lip_sync_with_audio_just/",
+            "text": "For a project, I'm looking to record an actor, and swap just a few words from the video with their voice customized to the user's preference. For example: If in the video, the actor says: I know David. If you're wondering how he makes great videos, checkout this page.\n\nHere I want to configure it this way: I know $name. If you're wondering how $genderpronoun makes great videos, checkout this page.\n\nSo, on an input box of my website, if they input their name to Steve, and select the gender as Male, it needs to lip sync the audio and video to that name and pronoun and provide the updated video with the same voice and lip sync output video. \n\nAny ideas on how to make this happen? I've looked into HeyGen, Wave2Lip and others, but they're mostly for making new videos from scratch with completely new scripts or training them. I'm looking for it to generate within a few seconds to a minute by sticking to the original video and script but only changing 2 words. Any local implementation or free or paid APIs would be much helpful.",
+            "created_utc": "2025-01-18 05:10:49 UTC",
+            "comments": [
+                {
+                    "author": "u/IntrovertedFL",
+                    "text": "How about this? [https://huggingface.co/spaces/TMElyralab/MuseTalk](https://huggingface.co/spaces/TMElyralab/MuseTalk)",
+                    "score": 1,
+                    "mentioned_urls": [
+                        "https://huggingface.co/spaces/TMElyralab/MuseTalk](https://huggingface.co/spaces/TMElyralab/MuseTalk)"
+                    ],
+                    "created_utc": "2025-01-18 15:06:36 UTC"
+                }
+            ]
+        },
+        {
+            "title": "What would you do with free access to a 4x H100 server?",
+            "author": "u/SquareJordan",
+            "score": 5,
+            "reddit_url": "https://reddit.com/r/LocalLLaMA/comments/1i4h3pp/what_would_you_do_with_free_access_to_a_4x_h100/",
+            "external_url": "https://www.reddit.com/r/LocalLLaMA/comments/1i4h3pp/what_would_you_do_with_free_access_to_a_4x_h100/",
+            "text": "Long story short I have one in the lab and all that’s being run on it thus far are benchmarks. What should I do with it?",
+            "created_utc": "2025-01-18 20:52:42 UTC",
+            "comments": [
+                {
+                    "author": "u/al_gorithm23",
+                    "text": "Lease them out on vast.ai",
+                    "score": 4,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 20:58:49 UTC"
+                },
+                {
+                    "author": "u/Vegetable_Sun_9225",
+                    "text": "Fine tune MoE models like DeepSeek",
+                    "score": 3,
+                    "mentioned_urls": [],
+                    "created_utc": "2025-01-18 20:55:17 UTC"
+                }
+            ]
+        }
+    ]
+}
