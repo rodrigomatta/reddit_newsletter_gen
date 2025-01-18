@@ -126,7 +126,7 @@ Gerencia a geração do conteúdo da newsletter utilizando IA, incluindo:
 Para executar o projeto, simplesmente rode o script principal:
 
 ```bash
-python nome_do_script.py
+python main.py
 ```
 
 O script irá:
