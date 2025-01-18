@@ -244,33 +244,22 @@ class NewsletterGenerator:
                     )
 
         # Adiciona instruções detalhadas para formatação
-        prompt += f"""
+         prompt += f"""
 Por favor, elabore a newsletter seguindo estas diretrizes:
 
 1. **Título**: "{newsletter_title}"
 2. **Data**: Incluir a data atual no formato "## [Data Atual]"
-3. **Estrutura**: 
-   - Organize o conteúdo em **6 a 8 temas principais**, cada um com um subtítulo envolvente.
-   - Inicie cada tema com um **emoji relevante** para aumentar o engajamento visual.
+3. **Estrutura**: Organizar o conteúdo em 5 a 6 temas principais
 4. **Para cada tema**:
    - Iniciar com um parágrafo introdutório envolvente
    - Incluir números específicos e detalhes técnicos relevantes
-   - Quando nescessário referenciar usuários utilizando o formato "**u/username**"
+   - Referenciar usuários utilizando o formato "**u/username**"
    - Destacar termos-chave e estatísticas em **negrito**
    - Incluir links relevantes mencionados nos posts e comentários
-   - **Introdução**: Comece com um parágrafo entre 50 palavras a 80 palavras de maneira envolvente que contextualize o assunto.
-   - **Detalhes Técnicos**: Inclua números, estatísticas e fatos específicos, destacando termos-chave em **negrito**.
-   - **Referências**: Utilize o formato "**u/username**" para mencionar usuários ou fontes, quando aplicável.
-   - **Links**: Inclua links relevantes para fontes, artigos ou recursos mencionados.
-   - **Tom**: Mantenha um tom informativo, mas acessível, com um toque de curiosidade e entusiasmo.
 5. **Seção Final**: Concluir com uma seção intitulada "Perspectivas Futuras"
 6. **Formatação**: Utilizar Markdown para toda a formatação
-7. **Foco**: 
-   - Priorize **precisão técnica** e **insights práticos**, mas sem perder a clareza e o engajamento.
-   - Destaque informações que sejam úteis para o público-alvo, como profissionais de tecnologia, entusiastas ou estudantes.
-7. **Idioma**:
-   - Escreva em **português do Brasil**, mantendo termos técnicos em inglês quando apropriado.
-   - Use uma linguagem clara e direta, evitando jargões excessivos.
+7. **Foco**: Priorizar precisão técnica e insights práticos
+8. **Idioma**: Escrever em português do Brasil, mantendo termos técnicos em inglês quando apropriado
 9. **Emojis**: Iniciar cada tema com um emoji relevante para aumentar o engajamento
 10. **Assinatura**: Finalizar com uma nota sobre a origem das informações
 """
