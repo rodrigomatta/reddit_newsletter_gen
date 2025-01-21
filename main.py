@@ -10,7 +10,7 @@ import markdown
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from dotenv import load_dotenv
 
 # Carrega variáveis do arquivo .env para o ambiente
@@ -25,8 +25,8 @@ class EnhancedRedditScraper:
             subreddit: Nome do subreddit a ser analisado
         """
         self.subreddit = subreddit
-        self.headers = {'User-Agent': 'Mozilla/5.0'}  # Cabeçalho para simular um navegador
-        self.base_url = f"https://www.reddit.com/r/{subreddit}"  # URL base do subreddit
+        self.headers = {'User-Agent': 'Mozilla/5.0'}
+        self.base_url = f"https://www.reddit.com/r/{subreddit}"
 
     def get_top_daily_posts(self, limit: int = 20) -> List[Dict[str, Any]]:
         """
@@ -38,27 +38,26 @@ class EnhancedRedditScraper:
         Returns:
             Lista de posts ordenada por popularidade
         """
-        url = f"{self.base_url}/top.json?t=day&limit={limit}"  # URL para obter os posts mais populares do dia
-        response = requests.get(url, headers=self.headers)  # Faz a requisição HTTP
+        url = f"{self.base_url}/top.json?t=day&limit={limit}"
+        response = requests.get(url, headers=self.headers)
 
-        if response.status_code != 200:  # Verifica se a requisição foi bem-sucedida
+        if response.status_code != 200:
             print(f"Erro ao acessar os posts: {response.status_code}")
             return []
 
-        posts = response.json()['data']['children']  # Extrai os posts da resposta JSON
+        posts = response.json()['data']['children']
         processed_posts = []
 
         for post in posts:
             post_data = post['data']
             # Adiciona URL do post e qualquer link externo mencionado
-            post_data['reddit_url'] = f"https://reddit.com{post_data['permalink']}"  # URL completa do post
+            post_data['reddit_url'] = f"https://reddit.com{post_data['permalink']}"
             if 'url' in post_data and not post_data['url'].startswith('https://reddit.com'):
-                post_data['external_url'] = post_data['url']  # URL externa mencionada no post
+                post_data['external_url'] = post_data['url']
             else:
                 post_data['external_url'] = None
             processed_posts.append(post_data)
 
-        # Ordena os posts por score (popularidade)
         return sorted(processed_posts, key=lambda x: x['score'], reverse=True)
 
     def get_post_comments(self, post_id: str, limit: int = 10) -> List[Dict[str, Any]]:
@@ -72,15 +71,15 @@ class EnhancedRedditScraper:
         Returns:
             Lista dos comentários mais relevantes
         """
-        url = f"{self.base_url}/comments/{post_id}.json"  # URL para obter os comentários do post
-        response = requests.get(url, headers=self.headers)  # Faz a requisição HTTP
+        url = f"{self.base_url}/comments/{post_id}.json"
+        response = requests.get(url, headers=self.headers)
 
-        if response.status_code != 200:  # Verifica se a requisição foi bem-sucedida
+        if response.status_code != 200:
             print(f"Erro ao acessar os comentários do post {post_id}: {response.status_code}")
             return []
 
         try:
-            comments_data = response.json()[1]['data']['children']  # Extrai os comentários da resposta JSON
+            comments_data = response.json()[1]['data']['children']
             processed_comments = []
 
             for comment in comments_data:
@@ -92,10 +91,9 @@ class EnhancedRedditScraper:
                         r'(?:%[0-9a-fA-F][0-9a-fA-F]))+',
                         comment_data['body']
                     )
-                    comment_data['mentioned_urls'] = urls  # Adiciona as URLs encontradas ao comentário
+                    comment_data['mentioned_urls'] = urls
                     processed_comments.append(comment_data)
 
-            # Ordena os comentários por score e limita o número de comentários retornados
             return sorted(processed_comments, key=lambda x: x['score'], reverse=True)[:limit]
 
         except (IndexError, KeyError) as e:
@@ -113,45 +111,45 @@ class EnhancedRedditScraper:
         Returns:
             Dicionário com o conteúdo coletado
         """
-        posts = self.get_top_daily_posts(post_limit)  # Obtém os posts mais populares do dia
+        posts = self.get_top_daily_posts(post_limit)
         collected_content = []
 
         for post in posts:
             post_content = {
-                'title': post.get('title', ''),  # Título do post
-                'author': f"u/{post.get('author', 'desconhecido')}",  # Autor do post
-                'score': post.get('score', 0),  # Score (popularidade) do post
-                'reddit_url': post.get('reddit_url', ''),  # URL do post no Reddit
-                'external_url': post.get('external_url', ''),  # URL externa mencionada no post
-                'text': post.get('selftext', ''),  # Texto do post
+                'title': post.get('title', ''),
+                'author': f"u/{post.get('author', 'desconhecido')}",
+                'score': post.get('score', 0),
+                'reddit_url': post.get('reddit_url', ''),
+                'external_url': post.get('external_url', ''),
+                'text': post.get('selftext', ''),
                 'created_utc': datetime.fromtimestamp(
                     post.get('created_utc', 0),
                     tz=pytz.UTC
-                ).strftime('%Y-%m-%d %H:%M:%S UTC'),  # Data de criação do post
-                'comments': []  # Lista de comentários do post
+                ).strftime('%Y-%m-%d %H:%M:%S UTC'),
+                'comments': []
             }
 
-            comments = self.get_post_comments(post['id'], comments_per_post)  # Obtém os comentários do post
+            comments = self.get_post_comments(post['id'], comments_per_post)
             for comment in comments:
                 comment_data = {
-                    'author': f"u/{comment.get('author', 'desconhecido')}",  # Autor do comentário
-                    'text': comment.get('body', ''),  # Texto do comentário
-                    'score': comment.get('score', 0),  # Score do comentário
-                    'mentioned_urls': comment.get('mentioned_urls', []),  # URLs mencionadas no comentário
+                    'author': f"u/{comment.get('author', 'desconhecido')}",
+                    'text': comment.get('body', ''),
+                    'score': comment.get('score', 0),
+                    'mentioned_urls': comment.get('mentioned_urls', []),
                     'created_utc': datetime.fromtimestamp(
                         comment.get('created_utc', 0),
                         tz=pytz.UTC
-                    ).strftime('%Y-%m-%d %H:%M:%S UTC')  # Data de criação do comentário
+                    ).strftime('%Y-%m-%d %H:%M:%S UTC')
                 }
-                post_content['comments'].append(comment_data)  # Adiciona o comentário ao post
+                post_content['comments'].append(comment_data)
 
-            collected_content.append(post_content)  # Adiciona o post ao conteúdo coletado
-            time.sleep(1)  # Respeita o limite de requisições para evitar bloqueios
+            collected_content.append(post_content)
+            time.sleep(1)  # Respeita o limite de requisições
 
         return {
-            'subreddit': self.subreddit,  # Nome do subreddit
-            'date': datetime.now(pytz.UTC).strftime('%Y-%m-%d'),  # Data de coleta
-            'posts': collected_content  # Lista de posts coletados
+            'subreddit': self.subreddit,
+            'date': datetime.now(pytz.UTC).strftime('%Y-%m-%d'),
+            'posts': collected_content
         }
 
 class NewsletterGenerator:
@@ -164,7 +162,7 @@ class NewsletterGenerator:
         """
         self.client = openai.OpenAI(
             api_key=api_key,
-            base_url=os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")  # URL base da API
+            base_url=os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
         )
 
     def generate_newsletter(self, content: Dict) -> str:
@@ -177,11 +175,11 @@ class NewsletterGenerator:
         Returns:
             Newsletter formatada em Markdown
         """
-        prompt = self._prepare_prompt(content)  # Prepara o prompt para a API
+        prompt = self._prepare_prompt(content)
 
         try:
             response = self.client.chat.completions.create(
-                model="deepseek-chat",  # Modelo da API
+                model="deepseek-chat",
                 messages=[
                     {
                         "role": "system",
@@ -197,10 +195,9 @@ class NewsletterGenerator:
                         "content": prompt
                     }
                 ],
-                temperature=0.7,  # Controla a criatividade da resposta
+                temperature=0.7,
             )
-            newsletter_text = response.choices[0].message.content  # Extrai o texto da resposta
-            return newsletter_text
+            return response.choices[0].message.content
 
         except Exception as e:
             print(f"Erro ao gerar newsletter: {e}")
@@ -216,7 +213,7 @@ class NewsletterGenerator:
         Returns:
             Prompt formatado
         """
-        newsletter_title = os.getenv("NEWSLETTER_TITLE", "LocalLLaMA Community Newsletter")  # Título da newsletter
+        newsletter_title = os.getenv("NEWSLETTER_TITLE", "LocalLLaMA Community Newsletter")
 
         prompt = (
             f"Crie uma newsletter profissional para r/{content['subreddit']} "
@@ -239,12 +236,9 @@ class NewsletterGenerator:
                 prompt += f"- {comment['author']}: {comment['text']}\n"
                 prompt += f"  Score: {comment['score']}\n"
                 if comment['mentioned_urls']:
-                    prompt += (
-                        f"  Links mencionados: {', '.join(comment['mentioned_urls'])}\n"
-                    )
+                    prompt += f"  Links mencionados: {', '.join(comment['mentioned_urls'])}\n"
 
-        # Adiciona instruções detalhadas para formatação
-         prompt += f"""
+        prompt += f"""
 Por favor, elabore a newsletter seguindo estas diretrizes:
 
 1. **Título**: "{newsletter_title}"
@@ -296,12 +290,14 @@ def send_email(newsletter_text: str) -> bool:
     Returns:
         bool: True se o email foi enviado com sucesso para todos os destinatários, False caso contrário
     """
+    # Configurações do servidor SMTP
     smtp_server = os.getenv("SMTP_SERVER")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_username = os.getenv("SMTP_USERNAME")
     smtp_password = os.getenv("SMTP_PASSWORD")
     email_from = os.getenv("EMAIL_FROM", smtp_username)
-    # Processa a lista de emails do .env
+    
+    # Processa a lista de emails do .env (agora suporta múltiplos destinatários)
     email_to_string = os.getenv("EMAIL_TO")
     newsletter_title = os.getenv("NEWSLETTER_TITLE", "LocalLLaMA Community Newsletter")
 
@@ -330,7 +326,7 @@ def send_email(newsletter_text: str) -> bool:
         ]
     )
 
-    # Template HTML permanece o mesmo...
+    # Template HTML com estilos CSS incorporados
     html_template = f"""
     <html>
         <head>
@@ -343,7 +339,43 @@ def send_email(newsletter_text: str) -> bool:
                     margin: 0 auto;
                     padding: 20px;
                 }}
-                /* ... resto do CSS ... */
+                h1, h2, h3, h4, h5, h6 {{
+                    color: #2c3e50;
+                    margin-top: 1.5em;
+                    margin-bottom: 0.5em;
+                }}
+                a {{
+                    color: #3498db;
+                    text-decoration: none;
+                }}
+                a:hover {{
+                    text-decoration: underline;
+                }}
+                code {{
+                    background-color: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 8px;
+                    overflow-x: auto;
+                }}
+                blockquote {{
+                    border-left: 4px solid #3498db;
+                    margin: 0;
+                    padding-left: 20px;
+                    color: #666;
+                }}
+                img {{
+                    max-width: 100%;
+                    height: auto;
+                }}
+                ul, ol {{
+                    padding-left: 20px;
+                }}
+                li {{
+                    margin-bottom: 8px;
+                }}
+                strong {{
+                    color: #2c3e50;
+                }}
             </style>
         </head>
         <body>
@@ -355,42 +387,51 @@ def send_email(newsletter_text: str) -> bool:
     try:
         # Conecta ao servidor SMTP com timeout de 30 segundos
         server = smtplib.SMTP(smtp_server, smtp_port, timeout=30)
-        server.set_debuglevel(1)
+        server.set_debuglevel(1)  # Habilita logs detalhados
         print(f"Conectado ao servidor SMTP: {smtp_server}:{smtp_port}")
         
+        # Inicia TLS para segurança
         server.starttls()
         print("Conexão TLS estabelecida")
         
+        # Realiza login no servidor
         server.login(smtp_username, smtp_password)
         print(f"Login realizado com sucesso para: {smtp_username}")
+        
+        # Contador para acompanhar envios bem-sucedidos
+        successful_sends = 0
         
         # Para cada destinatário, cria e envia uma mensagem individual
         for email_to in email_to_list:
             try:
-                # Cria a mensagem para este destinatário
+                # Cria a mensagem para este destinatário específico
                 msg = MIMEMultipart("alternative")
                 msg['From'] = email_from
                 msg['To'] = email_to
                 msg['Subject'] = subject
 
+                # Anexa versões em texto plano e HTML
                 text_part = MIMEText(newsletter_text, 'plain')
                 html_part = MIMEText(html_template, 'html')
                 
-                msg.attach(text_part)
-                msg.attach(html_part)
+                msg.attach(text_part)  # Versão em texto plano como fallback
+                msg.attach(html_part)  # Versão HTML como preferencial
                 
                 # Envia o email para este destinatário
                 server.sendmail(email_from, email_to, msg.as_string())
                 print(f"Email enviado com sucesso para: {email_to}")
+                successful_sends += 1
                 
             except Exception as e:
                 print(f"Erro ao enviar email para {email_to}: {str(e)}")
                 continue
         
-        # Fecha conexão
+        # Fecha conexão com o servidor
         server.quit()
         print("Conexão SMTP fechada")
-        return True
+        
+        # Retorna True apenas se todos os emails foram enviados com sucesso
+        return successful_sends == len(email_to_list)
         
     except smtplib.SMTPAuthenticationError:
         print("Erro de autenticação SMTP. Verifique seu usuário e senha.")
@@ -404,7 +445,7 @@ def send_email(newsletter_text: str) -> bool:
     except Exception as e:
         print(f"Erro inesperado ao enviar e-mail: {str(e)}")
         return False
-        
+
 def main():
     """
     Função principal que executa o processo completo de:
@@ -412,20 +453,21 @@ def main():
     - Salvar o conteúdo em um arquivo JSON
     - Gerar a newsletter via API
     - Converter Markdown para HTML
-    - Enviar por e-mail
+    - Enviar por e-mail para múltiplos destinatários
     """
     # Carrega variáveis do .env
-    subreddit = os.getenv("REDDIT_SUBREDDIT")  # Nome do subreddit
-    openai_api_key = os.getenv("OPENAI_API_KEY")  # Chave da API OpenAI/DeepSeek
+    subreddit = os.getenv("REDDIT_SUBREDDIT")
+    openai_api_key = os.getenv("OPENAI_API_KEY")
 
     if not subreddit or not openai_api_key:
         print("Erro: Variáveis de ambiente (REDDIT_SUBREDDIT ou OPENAI_API_KEY) não configuradas.")
         return
 
     try:
-        # Inicializa as classes
-        scraper = EnhancedRedditScraper(subreddit)  # Inicializa o scraper do Reddit
-        newsletter_gen = NewsletterGenerator(openai_api_key)  # Inicializa o gerador de newsletter
+        # Inicializa as classes principais
+        print(f"Iniciando coleta de dados do subreddit r/{subreddit}...")
+        scraper = EnhancedRedditScraper(subreddit)
+        newsletter_gen = NewsletterGenerator(openai_api_key)
 
         # Coleta conteúdo do Reddit
         print("Coletando conteúdo do Reddit...")
@@ -434,7 +476,8 @@ def main():
             comments_per_post=5
         )
 
-        # Salva o conteúdo em um arquivo JSON
+        # Salva o conteúdo em um arquivo JSON para referência
+        print("Salvando conteúdo coletado...")
         save_content_to_json(content, "reddit_content.json")
 
         # Gera a newsletter
@@ -442,12 +485,12 @@ def main():
         newsletter = newsletter_gen.generate_newsletter(content)
 
         if newsletter.strip():
-            # Envia o email diretamente
+            # Envia o email para todos os destinatários configurados
             print("Enviando newsletter por e-mail...")
             if send_email(newsletter):
-                print("Newsletter enviada com sucesso!")
+                print("Newsletter enviada com sucesso para todos os destinatários!")
             else:
-                print("Falha no envio da newsletter. Verifique os logs acima para mais detalhes.")
+                print("Houve falhas no envio da newsletter. Verifique os logs acima para mais detalhes.")
         else:
             print("Erro: Não foi possível gerar a newsletter (texto vazio).")
 
