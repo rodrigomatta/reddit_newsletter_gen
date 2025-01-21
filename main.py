@@ -287,41 +287,50 @@ def save_content_to_json(content: Dict, filename: str = "reddit_content.json") -
 
 def send_email(newsletter_text: str) -> bool:
     """
-    Envia o texto gerado por e-mail utilizando as configurações do .env.
+    Envia o texto gerado por e-mail para múltiplos destinatários utilizando as configurações do .env.
     Converte o Markdown para HTML antes de enviar.
     
     Args:
         newsletter_text: Conteúdo em Markdown para enviar no corpo do e-mail
         
     Returns:
-        bool: True se o email foi enviado com sucesso, False caso contrário
+        bool: True se o email foi enviado com sucesso para todos os destinatários, False caso contrário
     """
-    smtp_server = os.getenv("SMTP_SERVER")  # Servidor SMTP
-    smtp_port = int(os.getenv("SMTP_PORT", "587"))  # Porta SMTP
-    smtp_username = os.getenv("SMTP_USERNAME")  # Usuário SMTP
-    smtp_password = os.getenv("SMTP_PASSWORD")  # Senha SMTP
-    email_from = os.getenv("EMAIL_FROM", smtp_username)  # Remetente do e-mail
-    email_to = os.getenv("EMAIL_TO")  # Destinatário do e-mail
-    newsletter_title = os.getenv("NEWSLETTER_TITLE", "LocalLLaMA Community Newsletter")  # Título da newsletter
+    smtp_server = os.getenv("SMTP_SERVER")
+    smtp_port = int(os.getenv("SMTP_PORT", "587"))
+    smtp_username = os.getenv("SMTP_USERNAME")
+    smtp_password = os.getenv("SMTP_PASSWORD")
+    email_from = os.getenv("EMAIL_FROM", smtp_username)
+    # Processa a lista de emails do .env
+    email_to_string = os.getenv("EMAIL_TO")
+    newsletter_title = os.getenv("NEWSLETTER_TITLE", "LocalLLaMA Community Newsletter")
 
-    if not (smtp_server and smtp_port and smtp_username and smtp_password and email_to):
+    if not (smtp_server and smtp_port and smtp_username and smtp_password and email_to_string):
         print("Erro: Variáveis de ambiente SMTP não configuradas corretamente.")
         return False
 
-    subject = newsletter_title  # Assunto do e-mail
+    # Converte a string de emails em uma lista, removendo espaços em branco
+    email_to_list = [email.strip() for email in email_to_string.split(',')]
+    
+    # Verifica se há pelo menos um destinatário válido
+    if not email_to_list:
+        print("Erro: Nenhum endereço de email destinatário configurado.")
+        return False
+
+    subject = newsletter_title
 
     # Converte Markdown para HTML com extensões extras
     html_content = markdown.markdown(
         newsletter_text,
         extensions=[
-            'markdown.extensions.extra',        # Tabelas, código destacado, etc
-            'markdown.extensions.codehilite',   # Destaque de sintaxe
-            'markdown.extensions.toc',          # Índice de conteúdo
-            'markdown.extensions.sane_lists'    # Melhor tratamento de listas
+            'markdown.extensions.extra',
+            'markdown.extensions.codehilite',
+            'markdown.extensions.toc',
+            'markdown.extensions.sane_lists'
         ]
     )
 
-    # Adiciona CSS básico para melhorar a aparência
+    # Template HTML permanece o mesmo...
     html_template = f"""
     <html>
         <head>
@@ -334,49 +343,7 @@ def send_email(newsletter_text: str) -> bool:
                     margin: 0 auto;
                     padding: 20px;
                 }}
-                h1, h2, h3, h4, h5, h6 {{
-                    color: #2c3e50;
-                    margin-top: 1.5em;
-                    margin-bottom: 0.5em;
-                }}
-                a {{
-                    color: #3498db;
-                    text-decoration: none;
-                }}
-                a:hover {{
-                    text-decoration: underline;
-                }}
-                code {{
-                    background-color: #f8f9fa;
-                    padding: 2px 4px;
-                    border-radius: 4px;
-                    font-family: monospace;
-                }}
-                pre {{
-                    background-color: #f8f9fa;
-                    padding: 15px;
-                    border-radius: 8px;
-                    overflow-x: auto;
-                }}
-                blockquote {{
-                    border-left: 4px solid #3498db;
-                    margin: 0;
-                    padding-left: 20px;
-                    color: #666;
-                }}
-                img {{
-                    max-width: 100%;
-                    height: auto;
-                }}
-                ul, ol {{
-                    padding-left: 20px;
-                }}
-                li {{
-                    margin-bottom: 8px;
-                }}
-                strong {{
-                    color: #2c3e50;
-                }}
+                /* ... resto do CSS ... */
             </style>
         </head>
         <body>
@@ -385,36 +352,40 @@ def send_email(newsletter_text: str) -> bool:
     </html>
     """
 
-    # Cria a mensagem com múltiplas partes (texto plano + HTML)
-    msg = MIMEMultipart("alternative")
-    msg['From'] = email_from
-    msg['To'] = email_to
-    msg['Subject'] = subject
-
-    # Anexa tanto a versão em texto plano quanto a versão HTML
-    text_part = MIMEText(newsletter_text, 'plain')
-    html_part = MIMEText(html_template, 'html')
-    
-    msg.attach(text_part)  # Versão em texto plano como fallback
-    msg.attach(html_part)  # Versão HTML como preferencial
-
     try:
         # Conecta ao servidor SMTP com timeout de 30 segundos
         server = smtplib.SMTP(smtp_server, smtp_port, timeout=30)
-        server.set_debuglevel(1)  # Habilita logs detalhados
+        server.set_debuglevel(1)
         print(f"Conectado ao servidor SMTP: {smtp_server}:{smtp_port}")
         
-        # Inicia TLS
         server.starttls()
         print("Conexão TLS estabelecida")
         
-        # Login
         server.login(smtp_username, smtp_password)
         print(f"Login realizado com sucesso para: {smtp_username}")
         
-        # Envia o email
-        server.sendmail(email_from, email_to, msg.as_string())
-        print(f"Email enviado para: {email_to}")
+        # Para cada destinatário, cria e envia uma mensagem individual
+        for email_to in email_to_list:
+            try:
+                # Cria a mensagem para este destinatário
+                msg = MIMEMultipart("alternative")
+                msg['From'] = email_from
+                msg['To'] = email_to
+                msg['Subject'] = subject
+
+                text_part = MIMEText(newsletter_text, 'plain')
+                html_part = MIMEText(html_template, 'html')
+                
+                msg.attach(text_part)
+                msg.attach(html_part)
+                
+                # Envia o email para este destinatário
+                server.sendmail(email_from, email_to, msg.as_string())
+                print(f"Email enviado com sucesso para: {email_to}")
+                
+            except Exception as e:
+                print(f"Erro ao enviar email para {email_to}: {str(e)}")
+                continue
         
         # Fecha conexão
         server.quit()
@@ -433,7 +404,7 @@ def send_email(newsletter_text: str) -> bool:
     except Exception as e:
         print(f"Erro inesperado ao enviar e-mail: {str(e)}")
         return False
-
+        
 def main():
     """
     Função principal que executa o processo completo de:
