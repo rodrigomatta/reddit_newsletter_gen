@@ -153,21 +153,66 @@ class EnhancedRedditScraper:
         }
 
 class NewsletterGenerator:
-    def __init__(self, api_key: str):
+    def __init__(self, primary_api_key: str):
         """
-        Inicializa o gerador de newsletter.
+        Inicializa o gerador de newsletter com suporte a múltiplos provedores LLM.
         
         Args:
-            api_key: Chave da API OpenAI/DeepSeek
+            primary_api_key: Chave da API principal (DeepSeek)
         """
-        self.client = openai.OpenAI(
-            api_key=api_key,
-            base_url=os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
+        # Configurações do provedor principal (DeepSeek)
+        self.primary_api_key = primary_api_key
+        self.primary_base_url = os.getenv("OPENAI_BASE_URL", "https://api.deepseek.com")
+        self.primary_model = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
+        
+        # Configurações do provedor de backup (OpenAI)
+        self.backup_api_key = os.getenv("OPENAI_BACKUP_API_KEY")
+        self.backup_base_url = os.getenv("OPENAI_BACKUP_BASE_URL", "https://api.openai.com/v1")
+        self.backup_model = os.getenv("OPENAI_BACKUP_MODEL", "gpt-4")
+        
+        # Inicializa os clientes (serão criados apenas quando necessário)
+        self.primary_client = None
+        self.backup_client = None
+
+    def _initialize_primary_client(self):
+        """Inicializa o cliente DeepSeek."""
+        return openai.OpenAI(
+            api_key=self.primary_api_key,
+            base_url=self.primary_base_url
         )
+
+    def _initialize_backup_client(self):
+        """Inicializa o cliente OpenAI de backup."""
+        return openai.OpenAI(
+            api_key=self.backup_api_key,
+            base_url=self.backup_base_url
+        )
+
+    def _check_deepseek_availability(self) -> bool:
+        """
+        Verifica se a API da DeepSeek está disponível.
+        
+        Returns:
+            bool: True se a API estiver disponível, False caso contrário
+        """
+        try:
+            if not self.primary_client:
+                self.primary_client = self._initialize_primary_client()
+            
+            # Tenta fazer uma chamada simples para verificar disponibilidade
+            self.primary_client.chat.completions.create(
+                model=self.primary_model,
+                messages=[{"role": "user", "content": "test"}],
+                max_tokens=5
+            )
+            return True
+        except Exception as e:
+            print(f"DeepSeek API indisponível: {e}")
+            return False
 
     def generate_newsletter(self, content: Dict) -> str:
         """
-        Gera a newsletter em português usando a API.
+        Gera a newsletter usando o provedor LLM disponível.
         
         Args:
             content: Dicionário com o conteúdo do Reddit
@@ -176,32 +221,92 @@ class NewsletterGenerator:
             Newsletter formatada em Markdown
         """
         prompt = self._prepare_prompt(content)
+        
+        # Tenta primeiro com DeepSeek
+        if self._check_deepseek_availability():
+            try:
+                return self._generate_with_deepseek(prompt)
+            except Exception as e:
+                print(f"Erro ao gerar com DeepSeek: {e}")
+                print("Tentando provedor de backup...")
+        
+        # Se DeepSeek falhar ou estiver indisponível, usa OpenAI
+        if self.backup_api_key:
+            try:
+                return self._generate_with_openai(prompt)
+            except Exception as e:
+                print(f"Erro ao gerar com OpenAI: {e}")
+                raise Exception("Todos os provedores LLM falharam")
+        else:
+            raise Exception("API de backup não configurada e DeepSeek indisponível")
 
-        try:
-            response = self.client.chat.completions.create(
-                model="deepseek-chat",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "Você é um escritor profissional de newsletter para a comunidade de IA. "
-                            "Escreva a newsletter em português do Brasil, mantendo termos técnicos em inglês quando apropriado. "
-                            "Use formatação Markdown e inclua todos os links relevantes mencionados no conteúdo. "
-                            "Mantenha um tom profissional mas acessível, explicando conceitos técnicos de forma clara."
-                        )
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                temperature=0.7,
-            )
-            return response.choices[0].message.content
+    def _generate_with_deepseek(self, prompt: str) -> str:
+        """
+        Gera a newsletter usando a API DeepSeek.
+        
+        Args:
+            prompt: Prompt preparado para geração
+            
+        Returns:
+            Texto da newsletter gerado
+        """
+        if not self.primary_client:
+            self.primary_client = self._initialize_primary_client()
+            
+        response = self.primary_client.chat.completions.create(
+            model=self.primary_model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Você é um escritor profissional de newsletter para a comunidade de IA. "
+                        "Escreva a newsletter em português do Brasil, mantendo termos técnicos em inglês quando apropriado. "
+                        "Use formatação Markdown e inclua todos os links relevantes mencionados no conteúdo. "
+                        "Mantenha um tom profissional mas acessível, explicando conceitos técnicos de forma clara."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.7,
+        )
+        return response.choices[0].message.content
 
-        except Exception as e:
-            print(f"Erro ao gerar newsletter: {e}")
-            return ""
+    def _generate_with_openai(self, prompt: str) -> str:
+        """
+        Gera a newsletter usando a API OpenAI de backup.
+        
+        Args:
+            prompt: Prompt preparado para geração
+            
+        Returns:
+            Texto da newsletter gerado
+        """
+        if not self.backup_client:
+            self.backup_client = self._initialize_backup_client()
+            
+        response = self.backup_client.chat.completions.create(
+            model=self.backup_model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Você é um escritor profissional de newsletter para a comunidade de IA. "
+                        "Escreva a newsletter em português do Brasil, mantendo termos técnicos em inglês quando apropriado. "
+                        "Use formatação Markdown e inclua todos os links relevantes mencionados no conteúdo. "
+                        "Mantenha um tom profissional mas acessível, explicando conceitos técnicos de forma clara."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.7,
+        )
+        return response.choices[0].message.content
 
     def _prepare_prompt(self, content: Dict) -> str:
         """
